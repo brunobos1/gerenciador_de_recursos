@@ -1,11 +1,10 @@
-# Rodando backend
 FROM python:3.10.5
 
-WORKDIR /gerenciador/backend
+WORKDIR /code
 
-COPY . /gerenciador
+COPY . /code
 
-RUN pip install --no-cache-dir --upgrade -r /gerenciador/requirements.txt
+RUN pip install --no-cache-dir --upgrade -r /code/requirements.txt
 
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "80"]
 

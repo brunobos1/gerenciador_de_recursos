@@ -6,10 +6,6 @@ import app.database.crud_usuarios as db_usr
 
 router = APIRouter()
 
-usuario_atual = ''
-
-tipo_usuario = ''
-
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 # Cria a criptografia da senha

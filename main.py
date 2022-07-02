@@ -5,10 +5,7 @@ from passlib.context import CryptContext
 from app.auth.auth_handler import signJWT
 import app.database.crud_usuarios as db_usr
 
-app = FastAPI(
-    title="API Gerenciador de Recursos",
-    version="0.0.1",
-)
+app = FastAPI()
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
@@ -21,6 +18,7 @@ def check_user(data: UserLoginSchema):
     check_usuarios = db_usr.listar_usuarios_bd()
 
     for u in check_usuarios:
+        print(u)
         if u.usuario == data.usuario and verify_password(data.senha, u.senha) and u.status == 'Ativo' and u.tipo == 'administrador':
             return True
 
