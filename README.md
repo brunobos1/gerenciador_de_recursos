@@ -11,3 +11,10 @@ Link público EC2: http://ec2-18-228-118-141.sa-east-1.compute.amazonaws.com/doc
 Usuario: Admin
 Senha : bruno741123
 Host: database-1.coarjxirjuvt.sa-east-1.rds.amazonaws.com:3306
+
+### Usuário Administrador da API
+
+Usuario: brunobos1
+Senha: 673460
+
+Obs.: É necessario ser usuario administrador para poder adiquirir o token e criar outros do mesmo nivel.
