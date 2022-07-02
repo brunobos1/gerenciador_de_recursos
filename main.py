@@ -5,7 +5,7 @@ from passlib.context import CryptContext
 from app.auth.auth_handler import signJWT
 import app.database.crud_usuarios as db_usr
 
-app = FastAPI()
+app = FastAPI(title='API Gerenciador de Recursos', version='0.0.1')
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
