@@ -76,6 +76,7 @@ target/
 .env/
 .venv/
 venv/
+.venv
 
 # PyCharm
 .idea
@@ -94,3 +95,5 @@ venv/
 
 # Pessoal
 teste.py
+teste.py/
+.teste.py

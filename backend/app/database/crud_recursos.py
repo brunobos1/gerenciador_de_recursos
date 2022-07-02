@@ -69,7 +69,7 @@ def desalocar_recurso_bd(code):
 
     recurso = session.query(Recursos).filter_by(codigo=code).first()
 
-    recurso.id_usr = '' 
+    recurso.id_usr = 1
     recurso.data_inicio = datetime.now().strftime('%d/%m/%Y %H:%M:%S')
     recurso.data_fim = datetime.now().strftime('%d/%m/%Y %H:%M:%S')
     session.commit()

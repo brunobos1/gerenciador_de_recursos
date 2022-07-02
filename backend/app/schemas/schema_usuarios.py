@@ -29,6 +29,25 @@ class CriarUser(BaseModel):
             }
         }
 
+class CriarUserAdmin(BaseModel):
+    
+    nome: str = Field(...)
+    usuario: str = Field(...)
+    senha: str = Field(...)
+    tipo = 'administrador'
+    status = 'Ativo'
+
+    class Config:
+        schema_extra = {
+            "example": {
+                "nome": "José Silva Cardoso",
+                "usuario": "jose21",
+                "senha": "weakpassword",
+                "tipo": 'administrador ou usuario',
+                "status": 'Ativo ou Inativo'
+            }
+        }
+
 class AlterarUser(BaseModel):
     
     nome = ''

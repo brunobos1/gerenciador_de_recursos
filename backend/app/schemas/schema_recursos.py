@@ -9,7 +9,7 @@ class CriarRecurso(BaseModel):
     versao: str = Field(...)
     data_inicio = datetime.now().strftime('%d/%m/%Y %H:%M:%S')
     data_fim = datetime.now().strftime('%d/%m/%Y %H:%M:%S')
-    id_usr = ''
+    id_usr = 1
 
     class Config:
         schema_extra = {
@@ -23,7 +23,7 @@ class CriarRecurso(BaseModel):
 
 class AlterarRecurso(BaseModel):
     
-    id_usr = 0
+    id_usr = 1
     nome = ''
     codigo = ''
     versao = ''

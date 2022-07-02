@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Body, Depends
-from app.models.model_recursos import CriarRecurso, AlterarRecurso
+from app.schemas.schema_recursos import CriarRecurso, AlterarRecurso
 from app.auth.auth_bearer import JWTBearer
 from passlib.context import CryptContext
 import app.database.crud_recursos as db_rsc
@@ -27,9 +27,10 @@ def check_resources():
 
     recursos = db_rsc.listar_recursos_bd()
 
-    for r in recursos:
-        if datetime.strptime(r.data_fim, '%d/%m/%Y %H:%M:%S') <= datetime.now():
-            db_rsc.desalocar_recurso_bd(r.codigo)
+    if recursos != []:
+        for r in recursos:
+            if datetime.strptime(r.data_fim, '%d/%m/%Y %H:%M:%S') <= datetime.now():
+                db_rsc.desalocar_recurso_bd(r.codigo)
 
 @router.get("/recursos/listar_disponiveis", tags=["Recursos"])
 def listar_recursos_disponiveis():
@@ -65,10 +66,10 @@ def alocar_recurso(usuario, senha, codigo_recurso):
     return {'mensagem': 'Erro na alocação de recurso'}
 
 
-@router.post("/recursos/cadastrar", dependencies=[Depends(JWTBearer())], tags=["Recursos"])
+@router.post("/recursos/registrar", dependencies=[Depends(JWTBearer())], tags=["Recursos"])
 def registrar_recurso(resource: CriarRecurso = Body(...)):
-    check_resources()
-    try:
+        check_resources()
+    # try:
         consulta = db_rsc.consultar_recurso_bd(resource.codigo)
         if consulta != None:
             return {"mensagem": "Já existe um recurso com este código por favor tente outro."}
@@ -79,9 +80,9 @@ def registrar_recurso(resource: CriarRecurso = Body(...)):
 
         return {"mensagem": "Recurso cadastrado com sucesso", "data": recurso_novo}
     
-    except Exception as e:
+    # except Exception as e:
 
-        return {"mensagem": "Erro ao cadastrar recurso.", "erro": e}
+    #     return {"mensagem": "Erro ao cadastrar recurso.", "erro": e}
 
 @router.post("/recursos/consultar", dependencies=[Depends(JWTBearer())], tags=["Recursos"])
 def consultar_recurso(codigo_recurso):
@@ -123,7 +124,7 @@ def alterar_recurso(codigo_recurso, resource: AlterarRecurso = Body(...)):
         if resource.codigo == '': resource.codigo = consulta.codigo
         if resource.versao == '': resource.versao = consulta.versao
         if resource.potencia == 0: resource.potencia = consulta.potencia
-        if resource.id_usr != 0:
+        if resource.id_usr != 1:
             data_ini = datetime.now()
             resource.data_inicio = data_ini.strftime('%d/%m/%Y %H:%M:%S')
             resource.data_fim = (data_ini + timedelta(hours=1)).strftime('%d/%m/%Y %H:%M:%S')
@@ -149,11 +150,11 @@ def desalocar_recurso(codigo_recurso):
 
         consulta = db_rsc.consultar_recurso_bd(codigo_recurso)
 
-        return {"mensagem": "Recurso excluido com sucesso!", "data": consulta}
+        return {"mensagem": "Recurso desalocado com sucesso!", "data": consulta}
     
     except Exception as e:
 
-        return {"mensagem": "Erro ao excluir o recurso.", "erro": e}
+        return {"mensagem": "Erro ao desalocar o recurso.", "erro": e}
 
 @router.delete("/recursos/deletar", dependencies=[Depends(JWTBearer())], tags=["Recursos"])
 def deletar_recurso(codigo_recurso):

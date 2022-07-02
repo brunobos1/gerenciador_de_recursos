@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Body, Depends
 from passlib.context import CryptContext
-from app.models.model_usuarios import CriarUser, AlterarUser
+from app.schemas.schema_usuarios import CriarUser, AlterarUser, CriarUserAdmin
 from app.auth.auth_bearer import JWTBearer
 import app.database.crud_usuarios as db_usr
 
@@ -24,7 +24,51 @@ def cadastrar_usuario(user: CriarUser = Body(...)):
         if consultar_usuario != None:
             return {"mensagem": "Já existe um usuário com este login por favor tente outro."}
         
+        if len(user.senha) < 6:
+            return {"mensagem": "A senha deve conter pelo menos 6 caracteres"}
+        
+        if len(user.usuario) < 6:
+            return {"mensagem": "O usuario deve conter pelo menos 6 caracteres"}
+        
         user.senha = get_password_hash(user.senha)
+        
+        if user.usuario == '' or user.senha == '' or user.nome == '':
+            return {"mensagem": "Favor preencher todos os campos"}
+
+        db_usr.criar_usuario_bd(user)
+
+        usuario_novo = db_usr.consultar_usuario_bd(user.usuario)
+
+        return {"mensagem": "Usuário criado com sucesso", "data": usuario_novo}
+    
+    except Exception as e:
+
+        return {"mensagem": "Erro ao criar o usuario.", "erro": e}
+
+@router.post("/usuarios/cadastrar_admin", dependencies=[Depends(JWTBearer())], tags=["Usuarios"])
+def cadastrar_usuario_admin(user: CriarUserAdmin = Body(...)):
+
+    try:
+        consultar_usuario = db_usr.consultar_usuario_bd(user.usuario)
+        if consultar_usuario != None:
+            return {"mensagem": "Já existe um usuário com este login por favor tente outro."}
+        
+        if len(user.senha) < 6:
+            return {"mensagem": "A senha deve conter pelo menos 6 caracteres"}
+        
+        if len(user.usuario) < 6:
+            return {"mensagem": "O usuario deve conter pelo menos 6 caracteres"}
+        
+        user.senha = get_password_hash(user.senha)
+
+        if user.tipo != 'administrador' and user.tipo != 'usuario':
+            return {"mensagem": "Tipo de usuario invalido, favor escolher entre 'administrador' ou 'usuario'."}
+        
+        if user.status != 'Ativo' and user.status != 'Inativo':
+            return {"mensagem": "Status de usuario invalido, favor escolher entre 'Ativo' ou 'Inativo'."}
+        
+        if user.usuario == '' or user.senha == '' or user.nome == '':
+            return {"mensagem": "Favor preencher todos os campos"}
 
         db_usr.criar_usuario_bd(user)
 
