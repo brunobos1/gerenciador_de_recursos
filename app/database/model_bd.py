@@ -3,10 +3,10 @@ from email.policy import default
 from pydantic import BaseModel
 from sqlalchemy import Column, Integer, String, ForeignKey, create_engine
 from sqlalchemy.orm import declarative_base, relationship, sessionmaker
+import os
+from dotenv import find_dotenv, load_dotenv 
 
-DATABASE_URL = 'mysql+pymysql://admin:bruno741123@database-1.coarjxirjuvt.sa-east-1.rds.amazonaws.com:3306/gerenciador_recursos'
-
-engine = create_engine(DATABASE_URL)
+engine = create_engine(os.getenv("DATABASE_URL"))
 
 Base = declarative_base()
 
